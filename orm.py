@@ -1,8 +1,6 @@
 __author__ = 'Hugo'
 
-import asyncio, logging
-
-import aiomysql
+import asyncio, logging, aiomysql
 
 def log(sql, args=()):
     logging.info('SQL: %s' % sql)
@@ -11,7 +9,7 @@ def log(sql, args=()):
 我们需要创建一个全局的连接池，每个HTTP请求都可以从连接池中直接获取数据库连接
 '''
 @asyncio.coroutine
-def create_pool(loop, **kw):
+def create_pool(loop=None, **kw):
     logging.info('create database connection pool...')
     global __pool
     __pool = yield from aiomysql.create_pool(
@@ -19,7 +17,7 @@ def create_pool(loop, **kw):
         port=kw.get('port', 3306),
         user=kw['user'],
         password=kw['password'],
-        db=kw['db'],
+        db=kw['database'],
         charset=kw.get('charset', 'utf8'),
         autocommit=kw.get('autocommit', True),
         maxsize=kw.get('maxsize', 10),
@@ -225,23 +223,23 @@ class Model(dict, metaclass=ModelMetaclass):
             return None
         return cls(**rs[0])
 
-        async def save(self):
-            args = list(map(self.getValueOrDefault, self.__fields__))
-            args.append(self.getValueOrDefault(self.__primary_key__))
-            rows = await execute(self.__insert__, args)
-            if rows != 1:
-                logging.warn('failed to insert record: affected rows: %s' % rows)
+    async def save(self):
+        args = list(map(self.getValueOrDefault, self.__fields__))
+        args.append(self.getValueOrDefault(self.__primary_key__))
+        rows = await execute(self.__insert__, args)
+        if rows != 1:
+            logging.warn('failed to insert record: affected rows: %s' % rows)
 
-        async def update(self):
-            args = list(map(self.getValue, self.__fields__))
-            args.append(self.getValue(self.__primary_key__))
-            rows = await execute(self.__update__, args)
-            if rows != 1:
-                logging.warn('failed to update by primary key: affected rows: %s' % rows)
+    async def update(self):
+        args = list(map(self.getValue, self.__fields__))
+        args.append(self.getValue(self.__primary_key__))
+        rows = await execute(self.__update__, args)
+        if rows != 1:
+            logging.warn('failed to update by primary key: affected rows: %s' % rows)
 
-        async def remove(self):
-            args = [self.getValue(self.__primary_key__)]
-            rows = await execute(self.__delete__, args)
-            if rows != 1:
-                logging.warn('failed to remove by primary key: affected rows: %s' % rows)
+    async def remove(self):
+        args = [self.getValue(self.__primary_key__)]
+        rows = await execute(self.__delete__, args)
+        if rows != 1:
+            logging.warn('failed to remove by primary key: affected rows: %s' % rows)
 

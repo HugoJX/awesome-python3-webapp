@@ -88,17 +88,14 @@ class BooleanField(Field):
 
     def __init__(self, name=None, default=False):
         super().__init__(name, 'boolean', False, default)
-
 class IntegerField(Field):
 
     def __init__(self, name=None, primary_key=False, default=0):
         super().__init__(name, 'bigint', primary_key, default)
-
 class FloatField(Field):
 
     def __init__(self, name=None, primary_key=False, default=0.0):
         super().__init__(name, 'real', primary_key, default)
-
 class TextField(Field):
 
     def __init__(self, name=None, default=None):
@@ -176,6 +173,7 @@ class Model(dict, metaclass=ModelMetaclass):
                 setattr(self, key, value)
         return value
 
+    # 增删改查语句
     @classmethod
     async def findAll(cls, where=None, args=None, **kw):
         ' find objects by where clause. '

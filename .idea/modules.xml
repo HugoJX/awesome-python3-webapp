@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../PyL19-WSGI/.idea/PyL19-WSGI.iml" filepath="$PROJECT_DIR$/../PyL19-WSGI/.idea/PyL19-WSGI.iml" />
       <module fileurl="file://$PROJECT_DIR$/../PyL20-Asyncio/.idea/PyL20-Asyncio.iml" filepath="$PROJECT_DIR$/../PyL20-Asyncio/.idea/PyL20-Asyncio.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/awesome-python3-webapp.iml" filepath="$PROJECT_DIR$/.idea/awesome-python3-webapp.iml" />
     </modules>
